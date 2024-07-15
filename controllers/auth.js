@@ -29,12 +29,12 @@ const login = async(req, res = response) => {
         }
 
         // Verificar la contraseña
-        const validPassword = bcryptjs.compareSync( password, usuario.password );
-        if ( !validPassword ) {
-            return res.status(400).json({
-                msg: 'Usuario / Password no son correctos - password'
-            });
-        }
+            // const validPassword = bcryptjs.compareSync( password, usuario.password );
+            // if ( !validPassword ) {
+            //     return res.status(400).json({
+            //         msg: 'Usuario / Password no son correctos - password'
+            //     });
+            // }
 
         // Generar el JWT
         const token = await generarJWT( usuario.id );
@@ -68,7 +68,7 @@ const googleSignin = async(req, res = response) => {
             const data = {
                 nombre,
                 correo,
-                password: ':P',
+                password: ':p',
                 img,
                 google: true
             };
@@ -93,6 +93,7 @@ const googleSignin = async(req, res = response) => {
         });
         
     } catch (error) {
+        console.log(error);
 
         res.status(400).json({
             msg: 'Token de Google no es válido'
@@ -105,8 +106,23 @@ const googleSignin = async(req, res = response) => {
 }
 
 
+const renovarToken = async (req,res = response) =>{
+
+    const {usuario} = req;
+
+         // Generar el JWT
+         const token = await generarJWT( usuario.id );
+
+    res.json({
+        usuario,
+        token
+    })
+
+}
+
 
 module.exports = {
     login,
-    googleSignin
+    googleSignin,
+    renovarToken
 }
